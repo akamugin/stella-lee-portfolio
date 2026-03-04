@@ -145,12 +145,20 @@ export function HomeClient() {
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.45),transparent_40%),radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.4),transparent_32%),radial-gradient(circle_at_30%_90%,rgba(255,255,255,0.35),transparent_38%)]" />
 
           {!unlocked ? (
-            <motion.button
-              type="button"
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
+              role="button"
+              tabIndex={0}
               onClick={() => setUnlocked(true)}
-              className="relative z-10 flex h-full w-full flex-col items-center justify-center rounded-[30px] border border-white/35 bg-white/15 text-grape backdrop-blur"
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  setUnlocked(true);
+                }
+              }}
+              className="relative z-10 flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-[30px] border border-white/35 bg-white/15 text-grape backdrop-blur"
+              aria-label="Unlock phone"
             >
               <div className="absolute top-[18%] flex flex-col items-center">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-grape/70">{lockDate}</p>
@@ -172,7 +180,7 @@ export function HomeClient() {
               >
                 <SpotifyPill />
               </div>
-            </motion.button>
+            </motion.div>
           ) : (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
