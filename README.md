@@ -1,6 +1,6 @@
 # Stella Lee Portfolio
 
-Modern React portfolio with whimsical interactive styling.
+My portfolio website built with modern React tooling and playful interactive styling.
 
 ## Stack
 
@@ -34,7 +34,7 @@ npm run dev
 
 ## Notes
 
-- Home/About/Interests/Contact are on `/`.
+- Start screen is on `/`.
+- Home page is on `/home`.
 - Projects are on `/projects`.
 - Experience is on `/experience`.
-- Sound starts only after clicking `Enable Sound`.
