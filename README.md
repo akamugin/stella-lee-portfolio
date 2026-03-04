@@ -21,17 +21,5 @@ npm run dev
 - Use Node LTS (recommended: `22`, see `.nvmrc`).
 - Do not run `npm run dev` and `npm run build` in parallel in the same terminal workflow.
 
-## Deploy (GitHub + Vercel)
-
-1. Create a GitHub repo named `stella-lee-portfolio`.
-2. Push this folder to `main`.
-3. In Vercel, import the GitHub repo.
-4. Framework preset will auto-detect as Next.js.
-5. Deploy.
-
 ## Notes
-
-- Start screen is on `/`.
-- Home page is on `/home`.
-- Projects are on `/projects`.
-- Experience is on `/experience`.
+- Replace the png files in public/project-previews with your own project icons/photos`
