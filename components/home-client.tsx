@@ -100,6 +100,13 @@ export function HomeClient() {
 
   return (
     <main className="relative isolate mx-auto flex min-h-screen w-screen flex-col items-center justify-center px-3 py-3">
+      <p className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-petal/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-grape/85 sm:text-xs">
+        Click Around The Website
+      </p>
+      <p className="pointer-events-none absolute bottom-3 right-3 z-10 rounded-full bg-petal/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-grape/85 sm:text-xs">
+        Click Around The Website
+      </p>
+
       {sparks.map((spark) => (
         <motion.span
           key={spark.id}
@@ -126,9 +133,6 @@ export function HomeClient() {
       </div>
 
       <section className="relative z-10 mb-3 text-center">
-        <p className="inline-flex rounded-full bg-petal px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-grape">
-          Click around the website
-        </p>
         <h1 className="mt-3 text-4xl font-black leading-tight text-grape sm:text-5xl">Stella's Portfolio</h1>
       </section>
 
