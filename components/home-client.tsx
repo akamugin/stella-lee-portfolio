@@ -191,37 +191,35 @@ export function HomeClient() {
               aria-label="Unlock phone"
             >
               <div
-                className="grid h-full w-full grid-rows-[0.8fr_auto_auto_auto_1fr_auto_auto_0.8fr] text-center"
+                className="relative grid h-full w-full grid-rows-[0.8fr_auto_auto_auto_1fr_auto_auto_0.8fr] text-center"
                 style={{ ["--lock-center-x" as string]: `${lockCenterX}px` }}
               >
-                <div className="row-start-2 w-full">
+                <div className="absolute inset-x-0 top-[10%] w-full">
                   <p className="relative left-[var(--lock-center-x)] w-[min(92%,260px)] -translate-x-1/2 text-center text-xs font-semibold uppercase tracking-[0.2em] text-grape/70">
                     {lockDate}
                   </p>
-                </div>
-                <div className="row-start-3 mt-2 w-full">
-                  <h2 className="relative left-[var(--lock-center-x)] w-[min(94%,300px)] -translate-x-1/2 whitespace-nowrap text-center text-[clamp(2.4rem,14vw,4.6rem)] font-black leading-none">
+                  <h2 className="relative left-[var(--lock-center-x)] mt-[3%] w-[min(94%,300px)] -translate-x-1/2 whitespace-nowrap text-center text-[clamp(2.4rem,14vw,4.6rem)] font-black leading-none">
                     {lockTime}
                   </h2>
                 </div>
-                <div className="row-start-4 mt-[6%] w-full">
+                <div className="absolute inset-x-0 top-[40%] w-full -translate-y-1/2">
                   <h1 className="relative left-[var(--lock-center-x)] w-[min(92%,280px)] -translate-x-1/2 text-center text-[clamp(1.55rem,7vw,2.7rem)] font-black leading-[0.96] tracking-[-0.02em] text-grape">
                     Stella&apos;s Portfolio
                   </h1>
                 </div>
-                <div className="row-start-6 w-full">
+                <div className="absolute inset-x-0 top-[60%] -translate-y-1/2">
                   <p className="relative left-[var(--lock-center-x)] flex w-[min(82%,260px)] -translate-x-1/2 items-center justify-center rounded-full bg-white/65 px-7 py-2 text-sm font-semibold">
                     <span className="text-center">Tap To Unlock</span>
                     <span className="absolute right-5 top-1/2 -translate-y-1/2">✨</span>
                   </p>
                 </div>
-                <div className="row-start-7 mt-3 w-full">
+                <div className="absolute inset-x-0 top-[75%] -translate-y-1/2 w-full">
                   <p className="relative left-[var(--lock-center-x)] w-[min(92%,250px)] -translate-x-1/2 whitespace-pre-line text-center text-xs text-grape/80">
                     {"Welcome to my phone!\nPlease feel free to click through different pages to learn more about me!"}
                   </p>
                 </div>
                 <div
-                  className="row-start-8 w-full self-end pb-[8%]"
+                  className="absolute inset-x-0 top-[90%] -translate-y-1/2 w-full"
                   onClick={(event) => {
                     event.preventDefault();
                     event.stopPropagation();
