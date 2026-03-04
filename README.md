@@ -20,9 +20,6 @@ npm run dev
 
 - Use Node LTS (recommended: `22`, see `.nvmrc`).
 - Do not run `npm run dev` and `npm run build` in parallel in the same terminal workflow.
-- This repo uses separate cache dirs automatically:
-  - dev: `.next-dev`
-  - build/start: `.next-build`
 
 ## Deploy (GitHub + Vercel)
 
