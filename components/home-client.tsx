@@ -270,7 +270,7 @@ export function HomeClient() {
 
           <div
             className={`absolute left-1/2 z-20 w-[75%] max-w-[260px] -translate-x-1/2 ${
-              unlocked ? "top-6" : "top-[88%] -translate-y-1/2"
+               unlocked ? "top-6" : "top-[88%] -translate-y-1/2"
             }`}
             onClick={(event) => {
               event.preventDefault();
