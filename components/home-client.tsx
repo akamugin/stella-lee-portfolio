@@ -48,7 +48,6 @@ export function HomeClient() {
   const lockContentRef = useRef<HTMLDivElement | null>(null);
   const [sparks, setSparks] = useState<Spark[]>([]);
   const [unlocked, setUnlocked] = useState(false);
-  const [selected, setSelected] = useState<AppIcon>(apps[0]);
   const [now, setNow] = useState<Date | null>(null);
   const [lockCenterX, setLockCenterX] = useState(0);
 
@@ -123,7 +122,6 @@ export function HomeClient() {
     })();
 
   const openApp = (app: AppIcon) => {
-    setSelected(app);
     window.setTimeout(() => router.push(app.href), 120);
   };
 
@@ -224,11 +222,11 @@ export function HomeClient() {
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="relative z-10 flex h-full flex-col pt-14"
+              className="relative z-10 flex h-full flex-col pt-16"
             >
               <div className="mb-4 flex items-center justify-between rounded-2xl bg-white/55 px-3 py-2 text-xs font-semibold text-grape/80 backdrop-blur">
-                <span>Launcher Mode</span>
-                <span>{selected.title}</span>
+                <span>Profile</span>
+                <span>Stella Lee</span>
               </div>
 
               <div className="grid grid-cols-3 gap-3">
@@ -250,12 +248,14 @@ export function HomeClient() {
               </div>
 
               <div className="mt-4 rounded-2xl border border-white/45 bg-white/45 p-3 backdrop-blur">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-grape/70">Selected App</p>
-                <p className="mt-1 text-lg font-bold text-grape">
-                  {selected.icon} {selected.title}
-                </p>
-                <p className="text-xs text-grape/80">{selected.subtitle}</p>
-                <p className="mt-2 text-[11px] text-grape/75">Tap icon to open.</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-grape/70">Profile</p>
+                <p className="mt-1 text-lg font-bold text-grape">Stella Lee</p>
+                <p className="text-xs text-grape/80">SWE @ Meta</p>
+                <img
+                  src="/images/profile/kaito.png"
+                  alt="Stella Lee profile"
+                  className="mt-3 h-24 w-full rounded-xl object-cover object-center"
+                />
               </div>
 
               <button
@@ -270,7 +270,7 @@ export function HomeClient() {
 
           <div
             className={`absolute left-1/2 z-20 w-[75%] max-w-[260px] -translate-x-1/2 ${
-              unlocked ? "top-4" : "top-[88%] -translate-y-1/2"
+              unlocked ? "top-6" : "top-[88%] -translate-y-1/2"
             }`}
             onClick={(event) => {
               event.preventDefault();
