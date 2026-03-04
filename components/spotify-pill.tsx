@@ -88,7 +88,7 @@ export function SpotifyPill() {
     <button
       type="button"
       onClick={onToggle}
-      className="group flex w-full max-w-[280px] items-center gap-2 rounded-full border border-pink-300/80 bg-gradient-to-r from-pink-400 to-rose-300 px-3 py-1.5 text-white shadow-dreamy transition hover:-translate-y-0.5"
+      className="group mx-auto flex w-full max-w-[260px] items-center gap-2 rounded-full border border-pink-300/80 bg-gradient-to-r from-pink-400 to-rose-300 px-3 py-1.5 text-white shadow-dreamy transition hover:-translate-y-0.5"
       aria-label={playing ? "Pause music" : "Play music"}
     >
       <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-[13px] font-bold text-pink-500">

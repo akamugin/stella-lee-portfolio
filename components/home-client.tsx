@@ -186,7 +186,7 @@ export function HomeClient() {
                 {"Welcome to my phone!\nPlease feel free to click through different pages to learn more about me!"}
               </p>
               <div
-                className="absolute bottom-[8%]"
+                className="absolute bottom-[8%] left-1/2 w-[82%] max-w-[260px] -translate-x-1/2"
                 onClick={(event) => {
                   event.preventDefault();
                   event.stopPropagation();
@@ -201,7 +201,7 @@ export function HomeClient() {
               animate={{ opacity: 1, y: 0 }}
               className="relative z-10 flex h-full flex-col"
             >
-              <div className="mb-3">
+              <div className="mb-3 flex justify-center">
                 <SpotifyPill />
               </div>
               <div className="mb-4 flex items-center justify-between rounded-2xl bg-white/55 px-3 py-2 text-xs font-semibold text-grape/80 backdrop-blur">
