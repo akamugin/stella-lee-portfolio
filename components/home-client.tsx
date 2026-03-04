@@ -137,7 +137,7 @@ export function HomeClient() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45 }}
         data-no-spark="true"
-        className="relative z-10 h-[calc(100vh-8.75rem)] w-[min(84vw,330px)] max-h-[860px] max-w-[330px] rounded-[52px] border border-black/40 bg-[#0f0f12] p-3 shadow-[0_24px_50px_rgba(36,16,40,0.5)]"
+        className="relative z-10 h-[calc(100vh-8.75rem)] w-[min(84vw,330px)] max-h-[740px] max-w-[330px] rounded-[52px] border border-black/40 bg-[#0f0f12] p-3 shadow-[0_24px_50px_rgba(36,16,40,0.5)]"
       >
         <div className="absolute left-1/2 top-2 h-5 w-32 -translate-x-1/2 rounded-b-2xl bg-black/90" />
 
