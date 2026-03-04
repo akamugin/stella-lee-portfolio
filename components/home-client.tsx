@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SpotifyPill } from "./spotify-pill";
 
 type Spark = {
@@ -45,10 +45,12 @@ const stars = Array.from({ length: 44 }, (_, id) => ({
 
 export function HomeClient() {
   const router = useRouter();
+  const lockContentRef = useRef<HTMLDivElement | null>(null);
   const [sparks, setSparks] = useState<Spark[]>([]);
   const [unlocked, setUnlocked] = useState(false);
   const [selected, setSelected] = useState<AppIcon>(apps[0]);
   const [now, setNow] = useState<Date | null>(null);
+  const [lockCenterX, setLockCenterX] = useState(0);
 
   const createSpark = (x: number, y: number) => {
     const symbol = symbols[Math.floor(Math.random() * symbols.length)];
@@ -78,6 +80,22 @@ export function HomeClient() {
     const timer = window.setInterval(updateClock, 1000);
     return () => window.clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    const node = lockContentRef.current;
+    if (!node) {
+      return;
+    }
+
+    const updateCenter = () => {
+      setLockCenterX(node.clientWidth / 2);
+    };
+
+    updateCenter();
+    const observer = new ResizeObserver(updateCenter);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [unlocked]);
 
   const lockDate =
     now?.toLocaleDateString(undefined, {
@@ -159,6 +177,7 @@ export function HomeClient() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
+              ref={lockContentRef}
               role="button"
               tabIndex={0}
               onClick={() => setUnlocked(true)}
@@ -171,28 +190,47 @@ export function HomeClient() {
               className="relative z-10 flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-[30px] border border-white/35 bg-white/15 text-grape backdrop-blur"
               aria-label="Unlock phone"
             >
-              <div className="absolute top-[10%] flex w-[90%] flex-col items-center">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-grape/70">{lockDate}</p>
-                <h2 className="mt-2 whitespace-nowrap text-[clamp(2.4rem,14vw,4.6rem)] font-black leading-none">{lockTime}</h2>
-              </div>
-              <h1 className="absolute left-1/2 top-[35%] w-[86%] -translate-x-1/2 -translate-y-1/2 text-center text-[clamp(1.55rem,7vw,2.7rem)] font-black leading-[0.96] tracking-[-0.02em] text-grape">
-                Stella&apos;s Portfolio
-              </h1>
-              <p className="absolute left-1/2 top-1/2 inline-flex min-w-[220px] -translate-x-1/2 -translate-y-1/2 items-center justify-center gap-2 rounded-full bg-white/65 px-7 py-2 text-sm font-semibold">
-                <span>Tap To Unlock</span>
-                <span>✨</span>
-              </p>
-              <p className="absolute bottom-[27%] max-w-[250px] whitespace-pre-line text-center text-xs text-grape/80">
-                {"Welcome to my phone!\nPlease feel free to click through different pages to learn more about me!"}
-              </p>
               <div
-                className="absolute bottom-[8%] left-1/2 w-[82%] max-w-[260px] -translate-x-1/2"
-                onClick={(event) => {
-                  event.preventDefault();
-                  event.stopPropagation();
-                }}
+                className="grid h-full w-full grid-rows-[0.8fr_auto_auto_auto_1fr_auto_auto_0.8fr] text-center"
+                style={{ ["--lock-center-x" as string]: `${lockCenterX}px` }}
               >
-                <SpotifyPill />
+                <div className="row-start-2 w-full">
+                  <p className="relative left-[var(--lock-center-x)] w-[min(92%,260px)] -translate-x-1/2 text-center text-xs font-semibold uppercase tracking-[0.2em] text-grape/70">
+                    {lockDate}
+                  </p>
+                </div>
+                <div className="row-start-3 mt-2 w-full">
+                  <h2 className="relative left-[var(--lock-center-x)] w-[min(94%,300px)] -translate-x-1/2 whitespace-nowrap text-center text-[clamp(2.4rem,14vw,4.6rem)] font-black leading-none">
+                    {lockTime}
+                  </h2>
+                </div>
+                <div className="row-start-4 mt-[6%] w-full">
+                  <h1 className="relative left-[var(--lock-center-x)] w-[min(92%,280px)] -translate-x-1/2 text-center text-[clamp(1.55rem,7vw,2.7rem)] font-black leading-[0.96] tracking-[-0.02em] text-grape">
+                    Stella&apos;s Portfolio
+                  </h1>
+                </div>
+                <div className="row-start-6 w-full">
+                  <p className="relative left-[var(--lock-center-x)] flex w-[min(82%,260px)] -translate-x-1/2 items-center justify-center rounded-full bg-white/65 px-7 py-2 text-sm font-semibold">
+                    <span className="text-center">Tap To Unlock</span>
+                    <span className="absolute right-5 top-1/2 -translate-y-1/2">✨</span>
+                  </p>
+                </div>
+                <div className="row-start-7 mt-3 w-full">
+                  <p className="relative left-[var(--lock-center-x)] w-[min(92%,250px)] -translate-x-1/2 whitespace-pre-line text-center text-xs text-grape/80">
+                    {"Welcome to my phone!\nPlease feel free to click through different pages to learn more about me!"}
+                  </p>
+                </div>
+                <div
+                  className="row-start-8 w-full self-end pb-[8%]"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                  }}
+                >
+                  <div className="relative left-[var(--lock-center-x)] w-[min(82%,260px)] -translate-x-1/2">
+                    <SpotifyPill />
+                  </div>
+                </div>
               </div>
             </motion.div>
           ) : (
