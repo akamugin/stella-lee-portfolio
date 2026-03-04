@@ -20,7 +20,7 @@ type AppIcon = {
   subtitle: string;
 };
 
-const symbols = ["☁️", "🩷", "✨", "🕵️", "🎻", "🎹", "🪄", "🫧", "🧁"];
+const symbols = ["☁️", "🩷", "✨", "🕵️", "🎻", "🎹", "🪄", "🫧", "🧁", "🪼", "🐬", "🍀", "🌸", "🌹", "🌷", "🪻", "⭐️", "🪐", "🍓", "🍒", "🍩", "🍷"];
 
 function seeded(step: number) {
   const x = Math.sin(step * 999) * 10000;
