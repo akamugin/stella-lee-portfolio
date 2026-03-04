@@ -175,6 +175,9 @@ export function HomeClient() {
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-grape/70">{lockDate}</p>
                 <h2 className="mt-2 whitespace-nowrap text-[clamp(2.4rem,14vw,4.6rem)] font-black leading-none">{lockTime}</h2>
               </div>
+              <h1 className="absolute left-1/2 top-[35%] w-[86%] -translate-x-1/2 -translate-y-1/2 text-center text-[clamp(1.55rem,7vw,2.7rem)] font-black leading-[0.96] tracking-[-0.02em] text-grape">
+                Stella&apos;s Portfolio
+              </h1>
               <p className="absolute left-1/2 top-1/2 inline-flex min-w-[220px] -translate-x-1/2 -translate-y-1/2 items-center justify-center gap-2 rounded-full bg-white/65 px-7 py-2 text-sm font-semibold">
                 <span>Tap To Unlock</span>
                 <span>✨</span>
