@@ -87,11 +87,22 @@ export function HomeClient() {
     }) ?? "Loading date...";
 
   const lockTime =
-    now?.toLocaleTimeString(undefined, {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true
-    }) ?? "--:--";
+    (() => {
+      if (!now) {
+        return "--:--";
+      }
+      const formatter = new Intl.DateTimeFormat(undefined, {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+      });
+      const parts = formatter.formatToParts(now);
+      return parts
+        .filter((part) => part.type !== "dayPeriod")
+        .map((part) => part.value)
+        .join("")
+        .trim();
+    })();
 
   const openApp = (app: AppIcon) => {
     setSelected(app);
@@ -99,7 +110,7 @@ export function HomeClient() {
   };
 
   return (
-    <main className="relative isolate mx-auto flex min-h-screen w-screen flex-col items-center justify-center px-3 py-3">
+    <main className="relative isolate mx-auto flex min-h-[100svh] w-screen flex-col items-center justify-center px-3 py-3">
       <p className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-petal/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-grape/85 sm:text-xs">
         Click Around The Website
       </p>
@@ -132,16 +143,12 @@ export function HomeClient() {
         ))}
       </div>
 
-      <section className="relative z-10 mb-3 text-center">
-        <h1 className="mt-3 text-4xl font-black leading-tight text-grape sm:text-5xl">Stella's Portfolio</h1>
-      </section>
-
       <motion.section
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45 }}
         data-no-spark="true"
-        className="relative z-10 w-[min(84vw,330px,calc((100vh-8.75rem)*9/19.5))] max-w-[330px] aspect-[9/19.5] rounded-[52px] border border-black/40 bg-[#0f0f12] p-3 shadow-[0_24px_50px_rgba(36,16,40,0.5)]"
+        className="relative z-10 w-[min(96vw,calc((100svh-1.5rem)*393/852),378px)] aspect-[393/852] rounded-[52px] border border-black/40 bg-[#0f0f12] p-3 shadow-[0_24px_50px_rgba(36,16,40,0.5)]"
       >
         <div className="absolute left-1/2 top-2 h-5 w-32 -translate-x-1/2 rounded-b-2xl bg-black/90" />
 
@@ -164,9 +171,9 @@ export function HomeClient() {
               className="relative z-10 flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-[30px] border border-white/35 bg-white/15 text-grape backdrop-blur"
               aria-label="Unlock phone"
             >
-              <div className="absolute top-[18%] flex flex-col items-center">
+              <div className="absolute top-[10%] flex w-[90%] flex-col items-center">
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-grape/70">{lockDate}</p>
-                <h2 className="mt-2 text-6xl font-black">{lockTime}</h2>
+                <h2 className="mt-2 whitespace-nowrap text-[clamp(2.4rem,14vw,4.6rem)] font-black leading-none">{lockTime}</h2>
               </div>
               <p className="absolute left-1/2 top-1/2 inline-flex min-w-[220px] -translate-x-1/2 -translate-y-1/2 items-center justify-center gap-2 rounded-full bg-white/65 px-7 py-2 text-sm font-semibold">
                 <span>Tap To Unlock</span>
