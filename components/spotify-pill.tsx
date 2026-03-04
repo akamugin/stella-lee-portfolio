@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 type AudioEngine = {
   context: AudioContext;
@@ -8,6 +8,13 @@ type AudioEngine = {
 };
 
 const notes = [196, 220, 246.94, 261.63, 293.66, 329.63, 392];
+const PLAY_KEY = "stella_spotify_pill_playing";
+
+let sharedEngine: AudioEngine | null = null;
+let sharedTimer: number | null = null;
+let sharedNoteIndex = 0;
+let sharedPlaying = false;
+const listeners = new Set<(playing: boolean) => void>();
 
 function playNote(engine: AudioEngine, freq: number) {
   const osc = engine.context.createOscillator();
@@ -27,61 +34,88 @@ function playNote(engine: AudioEngine, freq: number) {
   osc.stop(now + 0.35);
 }
 
-export function SpotifyPill() {
-  const [playing, setPlaying] = useState(false);
-  const engineRef = useRef<AudioEngine | null>(null);
-  const timerRef = useRef<number | null>(null);
-  const noteIndexRef = useRef(0);
+function notify() {
+  listeners.forEach((listener) => listener(sharedPlaying));
+}
 
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) {
-        window.clearInterval(timerRef.current);
-      }
-      if (engineRef.current) {
-        engineRef.current.context.close();
-      }
-    };
-  }, []);
+function persistPlayingState(playing: boolean) {
+  try {
+    window.localStorage.setItem(PLAY_KEY, playing ? "1" : "0");
+  } catch {
+    // Ignore storage issues (private mode, quota, etc.)
+  }
+}
 
-  const start = async () => {
+async function startShared() {
+  if (sharedPlaying) {
+    return;
+  }
+
+  if (!sharedEngine) {
     const context = new window.AudioContext();
     const gain = context.createGain();
     gain.gain.value = 0.22;
     gain.connect(context.destination);
+    sharedEngine = { context, gain };
+  }
 
-    engineRef.current = { context, gain };
-    await context.resume();
+  await sharedEngine.context.resume();
 
-    timerRef.current = window.setInterval(() => {
-      if (!engineRef.current) {
-        return;
-      }
-      const note = notes[noteIndexRef.current % notes.length];
-      noteIndexRef.current += 1;
-      playNote(engineRef.current, note);
-    }, 360);
-  };
-
-  const stop = () => {
-    if (timerRef.current) {
-      window.clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-    if (engineRef.current) {
-      engineRef.current.context.close();
-      engineRef.current = null;
-    }
-  };
-
-  const onToggle = async () => {
-    if (!playing) {
-      await start();
-      setPlaying(true);
+  sharedTimer = window.setInterval(() => {
+    if (!sharedEngine) {
       return;
     }
-    stop();
-    setPlaying(false);
+    const note = notes[sharedNoteIndex % notes.length];
+    sharedNoteIndex += 1;
+    playNote(sharedEngine, note);
+  }, 360);
+
+  sharedPlaying = true;
+  persistPlayingState(true);
+  notify();
+}
+
+function stopShared() {
+  if (sharedTimer) {
+    window.clearInterval(sharedTimer);
+    sharedTimer = null;
+  }
+  if (sharedEngine) {
+    sharedEngine.context.close();
+    sharedEngine = null;
+  }
+  sharedPlaying = false;
+  persistPlayingState(false);
+  notify();
+}
+
+export function SpotifyPill() {
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    const onSharedState = (isPlaying: boolean) => setPlaying(isPlaying);
+    listeners.add(onSharedState);
+    setPlaying(sharedPlaying);
+
+    if (!sharedPlaying) {
+      try {
+        setPlaying(window.localStorage.getItem(PLAY_KEY) === "1");
+      } catch {
+        // Ignore storage issues and fall back to runtime state.
+      }
+    }
+
+    return () => {
+      listeners.delete(onSharedState);
+    };
+  }, []);
+
+  const onToggle = async () => {
+    if (!sharedPlaying) {
+      await startShared();
+      return;
+    }
+    stopShared();
   };
 
   return (
@@ -97,7 +131,7 @@ export function SpotifyPill() {
       <span className="min-w-0 flex-1 text-left">
         <span className="block text-[10px] uppercase tracking-[0.16em] text-white/80">Now Playing</span>
         <span className="marquee-wrap block text-xs font-semibold">
-          <span className={`marquee-track ${playing ? "animate" : ""}`}>Pink Moon Detective</span>
+          <span className={`marquee-track ${playing ? "animate" : ""}`}>Pink Moon Detective - Stella Mix</span>
         </span>
       </span>
       <span className={`h-2.5 w-2.5 rounded-full ${playing ? "bg-white" : "bg-white/45"}`} />
