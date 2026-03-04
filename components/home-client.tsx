@@ -218,28 +218,14 @@ export function HomeClient() {
                     {"Welcome to my phone!\nPlease feel free to click through different pages to learn more about me!"}
                   </p>
                 </div>
-                <div
-                  className="absolute inset-x-0 top-[90%] -translate-y-1/2 w-full"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                  }}
-                >
-                  <div className="relative left-[var(--lock-center-x)] w-[min(82%,260px)] -translate-x-1/2">
-                    <SpotifyPill />
-                  </div>
-                </div>
               </div>
             </motion.div>
           ) : (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="relative z-10 flex h-full flex-col"
+              className="relative z-10 flex h-full flex-col pt-14"
             >
-              <div className="mb-3 flex justify-center">
-                <SpotifyPill />
-              </div>
               <div className="mb-4 flex items-center justify-between rounded-2xl bg-white/55 px-3 py-2 text-xs font-semibold text-grape/80 backdrop-blur">
                 <span>Launcher Mode</span>
                 <span>{selected.title}</span>
@@ -281,6 +267,18 @@ export function HomeClient() {
               </button>
             </motion.div>
           )}
+
+          <div
+            className={`absolute left-1/2 z-20 w-[75%] max-w-[260px] -translate-x-1/2 ${
+              unlocked ? "top-4" : "top-[88%] -translate-y-1/2"
+            }`}
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+            }}
+          >
+            <SpotifyPill />
+          </div>
         </div>
       </motion.section>
     </main>

@@ -97,7 +97,7 @@ export function SpotifyPill() {
       <span className="min-w-0 flex-1 text-left">
         <span className="block text-[10px] uppercase tracking-[0.16em] text-white/80">Now Playing</span>
         <span className="marquee-wrap block text-xs font-semibold">
-          <span className={`marquee-track ${playing ? "animate" : ""}`}>Pink Moon Detective - Stella Mix</span>
+          <span className={`marquee-track ${playing ? "animate" : ""}`}>Pink Moon Detective</span>
         </span>
       </span>
       <span className={`h-2.5 w-2.5 rounded-full ${playing ? "bg-white" : "bg-white/45"}`} />
