@@ -37,6 +37,8 @@ const learningBackgroundImages = [
   "/images/conan/conan-6.jpg"
 ];
 
+const learningEmojis = ["⭐️", "🌸", "🌷", "🌹", "🍀", "🪼", "🐬", "🐾", "🍓", "🍏", "🍋", "🍒", "🍫", "🎀", "🩵", "❣️", "💕", "🤍", "♥️"];
+
 const loreItems = [
   "Detective Conan fan since age 5.",
   "I like learning instruments by ear.",
@@ -58,6 +60,18 @@ export default function MainHomePage() {
   const todayCraving = weeklyCravings[new Date().getDay()];
   // Add "currently-learning" to any interest tag in data/interests.tsx to include it in this modal.
   const currentLearningInterests = interests.filter((interest) => interest.tags?.includes("currently-learning"));
+  const [learningEmojiRow, setLearningEmojiRow] = useState<string[]>([]);
+
+  useEffect(() => {
+    const pickEight = () => {
+      const shuffled = [...learningEmojis].sort(() => Math.random() - 0.5);
+      setLearningEmojiRow(shuffled.slice(0, 8));
+    };
+
+    pickEight();
+    const timer = window.setInterval(pickEight, 2600);
+    return () => window.clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const onPageClick = (event: MouseEvent) => {
@@ -189,6 +203,7 @@ export default function MainHomePage() {
                       className="w-full rounded-2xl border border-white/45 bg-white/70 p-3 text-left transition hover:-translate-y-0.5"
                     >
                       <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-grape/65">Current Learning</p>
+                      <p className="mt-1 text-sm leading-none">{learningEmojiRow.join(" ")}</p>
                       <p className="mt-1 text-xs text-grape/75">Tap to see full list</p>
                     </button>
                   </div>
