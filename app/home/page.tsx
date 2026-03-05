@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BackgroundBlobs } from "@/components/background-blobs";
 import type { ProjectItem } from "@/components/projects-showcase";
+import { interests } from "@/data/interests";
 import { featuredProjectSlug, portfolioProjects } from "@/data/projects";
 import { TopNav } from "@/components/top-nav";
 
@@ -27,6 +28,15 @@ const weeklyCravings = [
   { day: "Saturday", item: "Malatang (Hot Pot)", icon: "🍲" }
 ];
 
+const learningBackgroundImages = [
+  "/images/conan/conan-1.jpg",
+  "/images/conan/conan-2.jpg",
+  "/images/conan/conan-3.jpg",
+  "/images/conan/conan-4.jpg",
+  "/images/conan/conan-5.jpg",
+  "/images/conan/conan-6.jpg"
+];
+
 const loreItems = [
   "Detective Conan fan since age 5.",
   "I like learning instruments by ear.",
@@ -43,8 +53,11 @@ export default function MainHomePage() {
   const [sparks, setSparks] = useState<Spark[]>([]);
   const [activeProject, setActiveProject] = useState<ProjectItem | null>(null);
   const [isCravingModalOpen, setIsCravingModalOpen] = useState(false);
+  const [isLearningModalOpen, setIsLearningModalOpen] = useState(false);
   const featuredProject = portfolioProjects.find((project) => project.slug === featuredProjectSlug) ?? portfolioProjects[0];
   const todayCraving = weeklyCravings[new Date().getDay()];
+  // Add "currently-learning" to any interest tag in data/interests.tsx to include it in this modal.
+  const currentLearningInterests = interests.filter((interest) => interest.tags?.includes("currently-learning"));
 
   useEffect(() => {
     const onPageClick = (event: MouseEvent) => {
@@ -65,6 +78,7 @@ export default function MainHomePage() {
       if (event.key === "Escape") {
         setActiveProject(null);
         setIsCravingModalOpen(false);
+        setIsLearningModalOpen(false);
       }
     };
 
@@ -169,10 +183,14 @@ export default function MainHomePage() {
                       <p className="mt-1 line-clamp-2 text-xs text-grape/75">{featuredProject.summary}</p>
                     </button>
 
-                    <article className="rounded-2xl border border-white/45 bg-white/70 p-3">
+                    <button
+                      type="button"
+                      onClick={() => setIsLearningModalOpen(true)}
+                      className="w-full rounded-2xl border border-white/45 bg-white/70 p-3 text-left transition hover:-translate-y-0.5"
+                    >
                       <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-grape/65">Current Learning</p>
-                      <p className="mt-1 text-sm font-semibold text-grape">Animation timing and tactile micro-interactions</p>
-                    </article>
+                      <p className="mt-1 text-xs text-grape/75">Tap to see full list</p>
+                    </button>
                   </div>
                 </section>
 
@@ -306,6 +324,63 @@ export default function MainHomePage() {
                   }`}
                 >
                   <span>{craving.icon}</span> {craving.day}: {craving.item}
+                </div>
+              ))}
+            </div>
+          </article>
+        </div>
+      )}
+
+      {isLearningModalOpen && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/45 p-4"
+          onClick={() => setIsLearningModalOpen(false)}
+          role="presentation"
+        >
+          <article
+            className="w-[min(680px,92vw)] rounded-3xl border border-white/70 bg-white p-6 shadow-[0_22px_45px_rgba(29,14,39,0.28)]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-grape/70">Current Learning</p>
+            <div className="mt-2 flex items-start justify-between gap-4">
+              <h3 className="text-3xl font-black text-grape">Learning Focus Tags</h3>
+              <button
+                type="button"
+                onClick={() => setIsLearningModalOpen(false)}
+                className="rounded-full bg-petal px-3 py-1 text-xs font-semibold text-grape"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="mt-4 rounded-2xl border border-white/70 bg-white p-4">
+              <div className="flex flex-wrap gap-2">
+                {currentLearningInterests.length > 0 ? (
+                  currentLearningInterests.map((interest) => (
+                    <span
+                      key={interest.name}
+                      className="rounded-full border border-rose/20 bg-gradient-to-r from-petal to-cloud px-3 py-1.5 text-sm font-semibold text-grape"
+                    >
+                      {interest.name}
+                    </span>
+                  ))
+                ) : (
+                  <p className="text-sm text-grape/80">No tagged interests yet.</p>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-4 grid grid-cols-3 gap-2">
+              {learningBackgroundImages.map((src, index) => (
+                <div key={src} className="relative overflow-hidden rounded-xl border border-white/70 bg-white/80">
+                  <img
+                    src={src}
+                    alt={`Detective Conan collage ${index + 1}`}
+                    onError={(event) => {
+                      event.currentTarget.style.display = "none";
+                    }}
+                    className={`h-28 w-full object-cover ${index % 2 === 0 ? "rotate-1 scale-110" : "-rotate-1 scale-110"}`}
+                  />
                 </div>
               ))}
             </div>
