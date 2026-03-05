@@ -17,9 +17,14 @@ type Spark = {
 
 const symbols = ["☁️", "🩷", "✨", "🕵️", "🎻", "🎹", "🪄", "🫧", "🧁", "🪼", "🐬", "🍀", "🌸", "🌹", "🌷", "🪻", "⭐️", "🪐", "🍓", "🍒", "🍩", "🍷"];
 
-const widgets = [
-  { label: "Mood", value: "Playful + focused on clean UI polish" },
-  { label: "Currently Learning", value: "Animation timing and tactile micro-interactions" }
+const weeklyCravings = [
+  { day: "Sunday", item: "Protein Matcha Latte", icon: "🍵" },
+  { day: "Monday", item: "Acai Bowl", icon: "🫐" },
+  { day: "Tuesday", item: "Tteokbokki", icon: "🌶️" },
+  { day: "Wednesday", item: "Poke", icon: "🐟" },
+  { day: "Thursday", item: "Buldak", icon: "🔥" },
+  { day: "Friday", item: "KBBQ", icon: "🥩" },
+  { day: "Saturday", item: "Malatang (Hot Pot)", icon: "🍲" }
 ];
 
 const loreItems = [
@@ -37,7 +42,9 @@ const philosophyItems = [
 export default function MainHomePage() {
   const [sparks, setSparks] = useState<Spark[]>([]);
   const [activeProject, setActiveProject] = useState<ProjectItem | null>(null);
+  const [isCravingModalOpen, setIsCravingModalOpen] = useState(false);
   const featuredProject = portfolioProjects.find((project) => project.slug === featuredProjectSlug) ?? portfolioProjects[0];
+  const todayCraving = weeklyCravings[new Date().getDay()];
 
   useEffect(() => {
     const onPageClick = (event: MouseEvent) => {
@@ -57,6 +64,7 @@ export default function MainHomePage() {
     const onEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setActiveProject(null);
+        setIsCravingModalOpen(false);
       }
     };
 
@@ -141,6 +149,18 @@ export default function MainHomePage() {
                   <div className="mt-2 space-y-2">
                     <button
                       type="button"
+                      onClick={() => setIsCravingModalOpen(true)}
+                      className="w-full rounded-2xl border border-white/45 bg-white/70 p-3 text-left transition hover:-translate-y-0.5"
+                    >
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-grape/65">Current Craving</p>
+                      <p className="mt-1 text-sm font-semibold text-grape">
+                        {todayCraving.icon} {todayCraving.item}
+                      </p>
+                      <p className="mt-1 text-xs text-grape/75">{todayCraving.day} special</p>
+                    </button>
+
+                    <button
+                      type="button"
                       onClick={() => setActiveProject(featuredProject)}
                       className="w-full rounded-2xl border border-white/45 bg-white/70 p-3 text-left transition hover:-translate-y-0.5"
                     >
@@ -149,12 +169,10 @@ export default function MainHomePage() {
                       <p className="mt-1 line-clamp-2 text-xs text-grape/75">{featuredProject.summary}</p>
                     </button>
 
-                    {widgets.map((item) => (
-                      <article key={item.label} className="rounded-2xl border border-white/45 bg-white/70 p-3">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-grape/65">{item.label}</p>
-                        <p className="mt-1 text-sm font-semibold text-grape">{item.value}</p>
-                      </article>
-                    ))}
+                    <article className="rounded-2xl border border-white/45 bg-white/70 p-3">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-grape/65">Current Learning</p>
+                      <p className="mt-1 text-sm font-semibold text-grape">Animation timing and tactile micro-interactions</p>
+                    </article>
                   </div>
                 </section>
 
@@ -237,6 +255,59 @@ export default function MainHomePage() {
               <Link href={activeProject.live} className="rounded-full bg-cloud px-3 py-1.5 text-grape">
                 Live
               </Link>
+            </div>
+          </article>
+        </div>
+      )}
+
+      {isCravingModalOpen && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/45 p-4"
+          onClick={() => setIsCravingModalOpen(false)}
+          role="presentation"
+        >
+          <article
+            className="w-[min(680px,92vw)] rounded-3xl border border-white/70 bg-gradient-to-b from-[#fff4fb] via-white to-[#eef8ff] p-6 shadow-[0_22px_45px_rgba(29,14,39,0.28)]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-grape/70">Current Craving</p>
+            <div className="mt-2 flex items-start justify-between gap-4">
+              <h3 className="text-3xl font-black text-grape">
+                {todayCraving.icon} {todayCraving.item}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsCravingModalOpen(false)}
+                className="rounded-full bg-petal px-3 py-1 text-xs font-semibold text-grape"
+              >
+                Close
+              </button>
+            </div>
+
+            <p className="mt-2 text-sm font-semibold text-grape/80">Today&apos;s pick for {todayCraving.day}</p>
+
+            <div className="mt-4 overflow-hidden rounded-2xl border border-rose/20 bg-white/80 p-2">
+              <img
+                src="/images/food/acai-bowl.svg"
+                alt="Decorative acai bowl"
+                className="h-48 w-full rounded-xl object-cover"
+              />
+            </div>
+
+            <p className="mt-4 text-xs font-semibold uppercase tracking-[0.16em] text-grape/70">Weekly Menu</p>
+            <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {weeklyCravings.map((craving) => (
+                <div
+                  key={craving.day}
+                  className={`rounded-xl border px-3 py-2 text-sm ${
+                    craving.day === todayCraving.day
+                      ? "border-rose/40 bg-gradient-to-r from-petal to-cloud font-semibold text-grape"
+                      : "border-white/70 bg-white/75 text-grape/85"
+                  }`}
+                >
+                  <span>{craving.icon}</span> {craving.day}: {craving.item}
+                </div>
+              ))}
             </div>
           </article>
         </div>
