@@ -38,6 +38,18 @@ function notify() {
   listeners.forEach((listener) => listener(sharedPlaying));
 }
 
+export function getSharedPlaybackState() {
+  return sharedPlaying;
+}
+
+export function subscribeSharedPlayback(listener: (playing: boolean) => void) {
+  listeners.add(listener);
+  listener(sharedPlaying);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
 function persistPlayingState(playing: boolean) {
   try {
     window.localStorage.setItem(PLAY_KEY, playing ? "1" : "0");
@@ -89,13 +101,15 @@ function stopShared() {
   notify();
 }
 
+export function stopSharedPlayback() {
+  stopShared();
+}
+
 export function SpotifyPill() {
   const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
-    const onSharedState = (isPlaying: boolean) => setPlaying(isPlaying);
-    listeners.add(onSharedState);
-    setPlaying(sharedPlaying);
+    const unsubscribe = subscribeSharedPlayback((isPlaying: boolean) => setPlaying(isPlaying));
 
     if (!sharedPlaying) {
       try {
@@ -106,7 +120,7 @@ export function SpotifyPill() {
     }
 
     return () => {
-      listeners.delete(onSharedState);
+      unsubscribe();
     };
   }, []);
 

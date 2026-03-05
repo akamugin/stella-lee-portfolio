@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MusicStopButton } from "@/components/music-stop-button";
 
 const links = [
   { href: "/", label: "Start" },
@@ -18,7 +19,8 @@ export function TopNav() {
           🍓 Stella Lee 
         </Link>
         <div className="flex w-full flex-col items-stretch gap-2 lg:w-auto lg:flex-row lg:items-center">
-          <ul className="flex flex-wrap items-center justify-end gap-2 text-sm font-medium text-grape/90">
+          <ul className="flex flex-wrap items-center justify-end gap-2 text-sm font-medium text-grape/90 lg:translate-x-4">
+            <MusicStopButton />
             {links.map((link) => (
               <li key={link.href}>
                 <Link
