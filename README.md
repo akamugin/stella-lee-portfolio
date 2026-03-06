@@ -16,6 +16,15 @@ npm install
 npm run dev
 ```
 
+## PostHog setup
+
+Create `.env.local` with:
+
+```bash
+NEXT_PUBLIC_POSTHOG_KEY=phc_your_project_key
+NEXT_PUBLIC_POSTHOG_HOST=https://us.i.posthog.com
+```
+
 ## Stability tips
 
 - Use Node LTS (recommended: `22`, see `.nvmrc`).
