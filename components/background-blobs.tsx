@@ -15,7 +15,7 @@ const hearts = Array.from({ length: 90 }, (_, id) => ({
 
 export function BackgroundBlobs() {
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+    <div aria-hidden className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
       {hearts.map((heart) => (
         <span
           key={`bg-heart-${heart.id}`}
