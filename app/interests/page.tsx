@@ -28,7 +28,7 @@ export default function InterestsPage() {
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-grape/70">Interests</p>
           <h1 className="mt-2 text-4xl font-black text-grape">Creative and Technical Interests</h1>
           <p className="mt-3 text-grape/80">
-            Click any interest to open its own modal and add your detailed write-up.
+            click me!
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             {interests.map((interest) => (
