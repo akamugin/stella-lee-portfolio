@@ -261,6 +261,12 @@ export default function MainHomePage() {
               <Link href="/experience" className="rounded-full bg-cloud px-4 py-2 text-grape transition hover:-translate-y-0.5">
                 Experience
               </Link>
+              <Link
+                href="/interests"
+                className="rounded-full bg-violet-200 px-4 py-2 text-grape transition hover:-translate-y-0.5"
+              >
+                Interests
+              </Link>
               <Link href="/contact" className="rounded-full bg-white px-4 py-2 text-grape ring-1 ring-rose/30 transition hover:-translate-y-0.5">
                 Contact
               </Link>
@@ -396,13 +402,20 @@ export default function MainHomePage() {
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-grape/70">Project Details</p>
             <div className="mt-2 flex items-start justify-between gap-4">
               <h3 className="text-3xl font-black text-grape">{activeProject.name}</h3>
-              <button
-                type="button"
-                onClick={() => setActiveProject(null)}
-                className="rounded-full bg-petal px-3 py-1 text-xs font-semibold text-grape"
-              >
-                Close
-              </button>
+              <div className="flex items-center gap-2">
+                {activeProject.live !== "#" && (
+                  <Link href={activeProject.live} className="rounded-full bg-cloud px-3 py-1 text-xs font-semibold text-grape">
+                    Live
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setActiveProject(null)}
+                  className="rounded-full bg-petal px-3 py-1 text-xs font-semibold text-grape"
+                >
+                  Close
+                </button>
+              </div>
             </div>
 
             <p className="mt-3 text-sm leading-relaxed text-grape/85">{activeProject.details}</p>
@@ -429,9 +442,6 @@ export default function MainHomePage() {
             <div className="mt-5 flex gap-2 text-xs font-semibold">
               <Link href={activeProject.github} className="rounded-full bg-petal px-3 py-1.5 text-grape">
                 GitHub
-              </Link>
-              <Link href={activeProject.live} className="rounded-full bg-cloud px-3 py-1.5 text-grape">
-                Live
               </Link>
             </div>
           </article>

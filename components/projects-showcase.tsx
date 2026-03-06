@@ -22,15 +22,31 @@ type ProjectsShowcaseProps = {
 
 const FALLBACK_PREVIEW =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop stop-color='%23ffd9ea'/%3E%3Cstop offset='1' stop-color='%23dff2ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='128' height='128' fill='url(%23g)'/%3E%3Ctext x='50%25' y='52%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='14' fill='%235b416f'%3EPreview%3C/text%3E%3C/svg%3E";
+const CARD_DETAILS_MAX = 150;
 
 export function ProjectsShowcase({ projects, featuredProjectSlug }: ProjectsShowcaseProps) {
-  const featuredProject = projects.find((project) => project.slug === featuredProjectSlug) ?? projects[0];
+  const displayOrder = ["dailyos", "steady", "yippu", "outfitella", "girl-math", "my-bookie", "work-in"];
+  const orderMap = new Map(displayOrder.map((slug, index) => [slug, index]));
+  const sortedProjects = [...projects].sort((a, b) => {
+    const aRank = orderMap.get(a.slug) ?? Number.MAX_SAFE_INTEGER;
+    const bRank = orderMap.get(b.slug) ?? Number.MAX_SAFE_INTEGER;
+    return aRank - bRank;
+  });
+
+  const featuredProject = sortedProjects.find((project) => project.slug === featuredProjectSlug) ?? sortedProjects[0];
   const orderedProjects = [
     featuredProject,
-    ...projects.filter((project) => project.slug !== featuredProject.slug)
+    ...sortedProjects.filter((project) => project.slug !== featuredProject.slug)
   ];
 
   const [activeProject, setActiveProject] = useState<ProjectItem | null>(null);
+
+  const toCardDetails = (details: string) => {
+    if (details.length <= CARD_DETAILS_MAX) {
+      return details;
+    }
+    return `${details.slice(0, CARD_DETAILS_MAX - 1).trimEnd()}...`;
+  };
 
   useEffect(() => {
     const onEscape = (event: KeyboardEvent) => {
@@ -59,7 +75,7 @@ export function ProjectsShowcase({ projects, featuredProjectSlug }: ProjectsShow
               <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-rose">Featured</p>
             )}
             <h3 className="pr-20 text-xl font-bold text-grape">{project.name}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-grape/80">{project.summary}</p>
+            <p className="mt-2 text-sm leading-relaxed text-grape/80">{toCardDetails(project.details)}</p>
             <p className="mt-4 text-xs font-semibold uppercase tracking-[0.16em] text-grape/70">Stack</p>
             <div className="mt-2 flex flex-wrap gap-2 pr-20">
               {project.stack.map((tech) => (
@@ -99,13 +115,20 @@ export function ProjectsShowcase({ projects, featuredProjectSlug }: ProjectsShow
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-grape/70">Project Details</p>
             <div className="mt-2 flex items-start justify-between gap-4">
               <h3 className="text-3xl font-black text-grape">{activeProject.name}</h3>
-              <button
-                type="button"
-                onClick={() => setActiveProject(null)}
-                className="rounded-full bg-petal px-3 py-1 text-xs font-semibold text-grape"
-              >
-                Close
-              </button>
+              <div className="flex items-center gap-2">
+                {activeProject.live !== "#" && (
+                  <Link href={activeProject.live} className="rounded-full bg-cloud px-3 py-1 text-xs font-semibold text-grape">
+                    Live
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setActiveProject(null)}
+                  className="rounded-full bg-petal px-3 py-1 text-xs font-semibold text-grape"
+                >
+                  Close
+                </button>
+              </div>
             </div>
 
             <p className="mt-3 text-sm leading-relaxed text-grape/85">{activeProject.details}</p>
@@ -132,9 +155,6 @@ export function ProjectsShowcase({ projects, featuredProjectSlug }: ProjectsShow
             <div className="mt-5 flex gap-2 text-xs font-semibold">
               <Link href={activeProject.github} className="rounded-full bg-petal px-3 py-1.5 text-grape">
                 GitHub
-              </Link>
-              <Link href={activeProject.live} className="rounded-full bg-cloud px-3 py-1.5 text-grape">
-                Live
               </Link>
             </div>
           </article>
