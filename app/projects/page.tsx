@@ -8,7 +8,7 @@ export default function ProjectsPage() {
     <>
       <BackgroundBlobs />
       <TopNav />
-      <main className="mx-auto w-[min(1080px,94vw)] py-10">
+      <main className="relative z-10 mx-auto w-[min(1080px,94vw)] py-10">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-grape/70">Projects</p>
           <h1 className="mt-2 text-4xl font-black text-grape">Personal Projects</h1>

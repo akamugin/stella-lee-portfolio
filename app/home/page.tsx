@@ -242,7 +242,7 @@ export default function MainHomePage() {
     <>
       <BackgroundBlobs />
       <TopNav />
-      <main className="relative mx-auto flex min-h-[calc(100svh-88px)] w-[min(1080px,94vw)] items-start py-4 sm:py-6 lg:py-8">
+      <main className="relative z-10 mx-auto flex min-h-[calc(100svh-88px)] w-[min(1080px,94vw)] items-start py-4 sm:py-6 lg:py-8">
         {sparks.map((spark) => (
           <motion.span
             key={spark.id}

@@ -6,7 +6,7 @@ export default function AboutPage() {
     <>
       <BackgroundBlobs />
       <TopNav />
-      <main className="mx-auto w-[min(980px,94vw)] py-10">
+      <main className="relative z-10 mx-auto w-[min(980px,94vw)] py-10">
         <section className="rounded-3xl border border-white/70 bg-white/80 p-8 shadow-dreamy">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-grape/70">About</p>
           <h1 className="mt-2 text-4xl font-black text-grape">Stella Lee</h1>

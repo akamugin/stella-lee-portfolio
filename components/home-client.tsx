@@ -126,7 +126,7 @@ export function HomeClient() {
   };
 
   return (
-    <main className="relative isolate mx-auto flex min-h-[100svh] w-screen flex-col items-center justify-center px-3 py-3">
+    <main className="relative z-10 isolate mx-auto flex min-h-[100svh] w-screen flex-col items-center justify-center px-3 py-3">
       <p className="pointer-events-none absolute left-3 top-3 z-10 rounded-full bg-petal/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-grape/85 sm:text-xs">
         Click Around The Website
       </p>
