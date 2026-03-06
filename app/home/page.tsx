@@ -19,13 +19,13 @@ type Spark = {
 const symbols = ["☁️", "🩷", "✨", "🕵️", "🎻", "🎹", "🪄", "🫧", "🧁", "🪼", "🐬", "🍀", "🌸", "🌹", "🌷", "🪻", "⭐️", "🪐", "🍓", "🍒", "🍩", "🍷"];
 
 const weeklyCravings = [
-  { day: "Sunday", item: "Protein Matcha Latte", icon: "🍵" },
-  { day: "Monday", item: "Acai Bowl", icon: "🫐" },
-  { day: "Tuesday", item: "Tteokbokki", icon: "🌶️" },
-  { day: "Wednesday", item: "Poke", icon: "🐟" },
-  { day: "Thursday", item: "Buldak", icon: "🔥" },
-  { day: "Friday", item: "KBBQ", icon: "🥩" },
-  { day: "Saturday", item: "Malatang (Hot Pot)", icon: "🍲" }
+  { day: "Sunday", item: "Protein Matcha Latte", icon: "🍵", image: "/images/food/matcha.jpg" },
+  { day: "Monday", item: "Acai Bowl", icon: "🫐", image: "/images/food/acai-bowl.jpg" },
+  { day: "Tuesday", item: "Tteokbokki", icon: "🌶️", image: "/images/food/tteokbokki.jpg" },
+  { day: "Wednesday", item: "Poke", icon: "🐟", image: "/images/food/poke.jpg" },
+  { day: "Thursday", item: "Buldak", icon: "🔥", image: "/images/food/buldak.jpg" },
+  { day: "Friday", item: "KBBQ", icon: "🥩", image: "/images/food/kbbq.jpg" },
+  { day: "Saturday", item: "Malatang (Hot Pot)", icon: "🍲", image: "/images/food/malatang.jpg" }
 ];
 
 const learningBackgroundImages = [
@@ -38,6 +38,7 @@ const learningBackgroundImages = [
 ];
 
 const learningEmojis = ["⭐️", "🌸", "🌷", "🌹", "🍀", "🪼", "🐬", "🐾", "🍓", "🍏", "🍋", "🍒", "🍫", "🎀", "🩵", "❣️", "💕", "🤍", "♥️"];
+const heroFloatingEmojis = ["⭐️", "🌸", "🌷", "🐬", "🍓", "🎀", "🩵", "💕"];
 
 const livedCountryPins = [
   { key: "korea", label: "Korea", left: "88%", top: "36.5%" },
@@ -125,6 +126,7 @@ export default function MainHomePage() {
   const pianoContextRef = useRef<AudioContext | null>(null);
   const featuredProject = portfolioProjects.find((project) => project.slug === featuredProjectSlug) ?? portfolioProjects[0];
   const todayCraving = weeklyCravings[new Date().getDay()];
+  const [selectedCraving, setSelectedCraving] = useState(todayCraving);
   // Add "currently-learning" to any interest tag in data/interests.tsx to include it in this modal.
   const currentLearningInterests = interests.filter((interest) => interest.tags?.includes("currently-learning"));
   const allTravelCountries = [...traveledCountries, ...extraTravelCountries];
@@ -225,7 +227,7 @@ export default function MainHomePage() {
     <>
       <BackgroundBlobs />
       <TopNav />
-      <main className="relative mx-auto w-[min(1080px,94vw)] py-10">
+      <main className="relative mx-auto flex min-h-[calc(100svh-88px)] w-[min(1080px,94vw)] items-start py-4 sm:py-6 lg:py-8">
         {sparks.map((spark) => (
           <motion.span
             key={spark.id}
@@ -239,8 +241,8 @@ export default function MainHomePage() {
           </motion.span>
         ))}
 
-        <section className="grid items-center gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-          <div className="rounded-3xl border border-white/70 bg-white/80 p-8 shadow-dreamy">
+        <section className="grid w-full items-start gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:gap-8">
+          <div className="rounded-3xl border border-white/70 bg-white/80 p-5 shadow-dreamy sm:p-6 lg:p-8">
             <p className="inline-flex rounded-full bg-petal px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-grape">
               Home
             </p>
@@ -271,15 +273,29 @@ export default function MainHomePage() {
                 Contact
               </Link>
             </div>
+
+            <div className="relative mt-5 h-16 overflow-hidden rounded-2xl bg-white/45">
+              {heroFloatingEmojis.map((emoji, index) => (
+                <motion.span
+                  key={`${emoji}-${index}`}
+                  className="absolute text-xl"
+                  style={{ left: `${8 + index * 11}%`, top: `${10 + (index % 3) * 20}%` }}
+                  animate={{ y: [0, -8, 0], rotate: [0, 6, 0], opacity: [0.8, 1, 0.8] }}
+                  transition={{ duration: 2.4 + (index % 4) * 0.4, repeat: Infinity, delay: index * 0.12 }}
+                >
+                  {emoji}
+                </motion.span>
+              ))}
+            </div>
           </div>
 
           <motion.aside
             initial={{ opacity: 0, x: 14 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
-            className="mx-auto w-[min(92vw,350px)] rounded-[42px] border border-black/40 bg-[#111115] p-3 shadow-[0_20px_45px_rgba(33,15,35,0.45)] lg:ml-auto lg:mr-0 lg:justify-self-end"
+            className="mx-auto aspect-[9/19.5] w-[min(92vw,350px,calc((100svh-9rem)*9/19.5))] sm:min-w-[360px] rounded-[42px] border border-black/40 bg-[#111115] p-3 shadow-[0_20px_45px_rgba(33,15,35,0.45)] lg:ml-auto lg:mr-0 lg:justify-self-end"
           >
-            <div className="relative aspect-[9/19.5] w-full overflow-hidden rounded-[32px] border border-white/15 bg-gradient-to-b from-[#ffd9ec] to-[#dff3ff] p-3">
+            <div className="relative h-full w-full overflow-hidden rounded-[32px] border border-white/15 bg-gradient-to-b from-[#ffd9ec] to-[#dff3ff] p-3">
               <div className="pointer-events-none absolute left-1/2 top-0 h-5 w-28 -translate-x-1/2 rounded-b-2xl bg-black/80" />
 
               <div className="relative z-10 h-full overflow-y-auto rounded-[24px] border border-white/35 bg-white/20 p-3 backdrop-blur">
@@ -304,7 +320,10 @@ export default function MainHomePage() {
                   <div className="mt-2 space-y-2">
                     <button
                       type="button"
-                      onClick={() => setIsCravingModalOpen(true)}
+                      onClick={() => {
+                        setSelectedCraving(todayCraving);
+                        setIsCravingModalOpen(true);
+                      }}
                       className="w-full rounded-2xl border border-white/45 bg-white/70 p-3 text-left transition hover:-translate-y-0.5"
                     >
                       <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-grape/65">Current Craving</p>
@@ -461,7 +480,7 @@ export default function MainHomePage() {
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-grape/70">Current Craving</p>
             <div className="mt-2 flex items-start justify-between gap-4">
               <h3 className="text-3xl font-black text-grape">
-                {todayCraving.icon} {todayCraving.item}
+                {selectedCraving.icon} {selectedCraving.item}
               </h3>
               <button
                 type="button"
@@ -472,29 +491,34 @@ export default function MainHomePage() {
               </button>
             </div>
 
-            <p className="mt-2 text-sm font-semibold text-grape/80">Today&apos;s pick for {todayCraving.day}</p>
+            <p className="mt-2 text-sm font-semibold text-grape/80">{selectedCraving.day} pick</p>
 
             <div className="mt-4 overflow-hidden rounded-2xl border border-rose/20 bg-white/80 p-2">
               <img
-                src="/images/food/acai-bowl.svg"
-                alt="Decorative acai bowl"
-                className="h-48 w-full rounded-xl object-cover"
+                src={selectedCraving.image}
+                alt={`${selectedCraving.item} photo`}
+                onError={(event) => {
+                  event.currentTarget.src = "/images/food/matcha.jpg";
+                }}
+                className="h-[min(52vh,430px)] w-full rounded-xl bg-white object-contain"
               />
             </div>
 
             <p className="mt-4 text-xs font-semibold uppercase tracking-[0.16em] text-grape/70">Weekly Menu</p>
             <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
               {weeklyCravings.map((craving) => (
-                <div
+                <button
                   key={craving.day}
+                  type="button"
+                  onClick={() => setSelectedCraving(craving)}
                   className={`rounded-xl border px-3 py-2 text-sm ${
-                    craving.day === todayCraving.day
+                    craving.day === selectedCraving.day
                       ? "border-rose/40 bg-gradient-to-r from-petal to-cloud font-semibold text-grape"
-                      : "border-white/70 bg-white/75 text-grape/85"
+                      : "border-white/70 bg-white/75 text-grape/85 hover:bg-white"
                   }`}
                 >
                   <span>{craving.icon}</span> {craving.day}: {craving.item}
-                </div>
+                </button>
               ))}
             </div>
           </article>
