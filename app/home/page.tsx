@@ -69,6 +69,39 @@ const blackPianoKeys = [
   { note: "A#3", freq: 233.08, left: "73.5%" }
 ];
 
+const conanFavorites = [
+  {
+    name: "Akai Shuichi",
+    subtitle: "Calm strategist with insane precision",
+    about: "I like Akai because he is quiet, sharp, and always a few steps ahead.",
+    image: "/images/conan/favorites/akai.jpg"
+  },
+  {
+    name: "Amuro Tooru",
+    subtitle: "Triple-role genius",
+    about: "Amuro is one of the most layered characters in the series.",
+    image: "/images/conan/favorites/amuro.jpg"
+  },
+  {
+    name: "Gin",
+    subtitle: "Cold and iconic villain energy",
+    about: "Gin raises the stakes every time he appears.",
+    image: "/images/conan/favorites/gin.jpg"
+  },
+  {
+    name: "Kaito Kid",
+    subtitle: "Magician thief with style",
+    about: "Kaito Kid scenes are always fun, clever, and dramatic.",
+    image: "/images/conan/favorites/kaito-kid.jpg"
+  },
+  {
+    name: "Conan (Shinichi)",
+    subtitle: "Relentless detective mind",
+    about: "Conan is the core reason the story stays so exciting.",
+    image: "/images/conan/favorites/conan.jpg"
+  }
+];
+
 const philosophyItems = [
   "If onboarding takes too long, simplify it first.",
   "Ship quickly, then polish what users touch most.",
@@ -82,11 +115,13 @@ export default function MainHomePage() {
   const [isLearningModalOpen, setIsLearningModalOpen] = useState(false);
   const [isCodingLoreModalOpen, setIsCodingLoreModalOpen] = useState(false);
   const [isPerfectPitchModalOpen, setIsPerfectPitchModalOpen] = useState(false);
+  const [isConanModalOpen, setIsConanModalOpen] = useState(false);
   const [isCountriesModalOpen, setIsCountriesModalOpen] = useState(false);
   const [litCountries, setLitCountries] = useState<string[]>([]);
   const [otherTravelCountry, setOtherTravelCountry] = useState("");
   const [extraTravelCountries, setExtraTravelCountries] = useState<string[]>([]);
   const [travelTagPositions, setTravelTagPositions] = useState<Record<string, { left: number; top: number }>>({});
+  const [activeConanCharacter, setActiveConanCharacter] = useState(0);
   const pianoContextRef = useRef<AudioContext | null>(null);
   const featuredProject = portfolioProjects.find((project) => project.slug === featuredProjectSlug) ?? portfolioProjects[0];
   const todayCraving = weeklyCravings[new Date().getDay()];
@@ -168,6 +203,7 @@ export default function MainHomePage() {
         setIsLearningModalOpen(false);
         setIsCodingLoreModalOpen(false);
         setIsPerfectPitchModalOpen(false);
+        setIsConanModalOpen(false);
         setIsCountriesModalOpen(false);
       }
     };
@@ -321,9 +357,13 @@ export default function MainHomePage() {
                       I have perfect pitch.
                     </button>
 
-                    <article className="rounded-xl border border-white/50 bg-white/75 px-3 py-2">
-                      4. I have been a Detective Conan fan since age 5.
-                    </article>
+                    <button
+                      type="button"
+                      onClick={() => setIsConanModalOpen(true)}
+                      className="w-full rounded-xl border border-white/50 bg-white/75 px-3 py-2 text-left transition hover:-translate-y-0.5"
+                    >
+                      I&apos;ve been watching Detective Conan since I was 5.
+                    </button>
                   </div>
                 </section>
 
@@ -720,6 +760,127 @@ export default function MainHomePage() {
                   </button>
                 ))}
               </div>
+            </div>
+          </article>
+        </div>
+      )}
+
+      {isConanModalOpen && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/45 p-4"
+          onClick={() => setIsConanModalOpen(false)}
+          role="presentation"
+        >
+          <article
+            className="w-[min(1080px,96vw)] rounded-3xl border border-white/70 bg-gradient-to-b from-white to-[#f5f9ff] p-6 shadow-[0_22px_45px_rgba(29,14,39,0.28)]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-grape/70">Lore Detail</p>
+            <div className="mt-2 flex items-start justify-between gap-4">
+              <h3 className="text-3xl font-black text-grape">Detective Conan</h3>
+              <button
+                type="button"
+                onClick={() => setIsConanModalOpen(false)}
+                className="rounded-full bg-petal px-3 py-1 text-xs font-semibold text-grape"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="mt-4 grid gap-4 lg:grid-cols-[1.02fr_0.98fr]">
+              <section className="rounded-2xl border border-white/70 bg-white p-4">
+                <h4 className="text-sm font-bold uppercase tracking-[0.14em] text-grape/75">why i love conan</h4>
+                <p className="mt-2 text-sm leading-relaxed text-grape/85">
+                  Detective Conan has mystery, strategy, emotional arcs, and characters with very different motivations.
+                  I love how every case feels different while still connecting to a bigger story.
+                </p>
+
+                <h4 className="mt-5 text-sm font-bold uppercase tracking-[0.14em] text-grape/75">who do i like in conan</h4>
+                <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-grape/85">
+                  <li>akai shuichi</li>
+                  <li>amuro tooru</li>
+                  <li>gin</li>
+                  <li>kaito kid</li>
+                  <li>conan (shinichi)</li>
+                </ol>
+
+                <h4 className="mt-5 text-sm font-bold uppercase tracking-[0.14em] text-grape/75">
+                  who do i think is the smartest in conan
+                </h4>
+                <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm text-grape/85">
+                  <li>kudo yusaku</li>
+                  <li>haneda shukichi</li>
+                  <li>conan</li>
+                  <li>akai</li>
+                  <li>amuro</li>
+                  <li>kaito kid</li>
+                  <li>everyone else</li>
+                  <li>that one stupid inspector</li>
+                </ol>
+              </section>
+
+              <section className="rounded-2xl border border-white/70 bg-white p-4">
+                <h4 className="text-sm font-bold uppercase tracking-[0.14em] text-grape/75">favorite characters</h4>
+                <p className="mt-1 text-xs text-grape/70">Hover a name to learn more. Use arrows to slide through 5 people.</p>
+
+                <div className="relative mt-3 overflow-hidden rounded-2xl border border-white/70">
+                  <div
+                    className="flex transition-transform duration-500 ease-out"
+                    style={{ transform: `translateX(-${activeConanCharacter * 100}%)` }}
+                  >
+                    {conanFavorites.map((character, index) => (
+                      <img
+                        key={character.name}
+                        src={character.image}
+                        alt={character.name}
+                        className="h-56 w-full flex-shrink-0 object-cover"
+                        onError={(event) => {
+                          event.currentTarget.alt = `Character ${index + 1}`;
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setActiveConanCharacter((current) => (current === 0 ? conanFavorites.length - 1 : current - 1))}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/85 px-2 py-1 text-xs font-semibold text-grape"
+                  >
+                    ◀
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveConanCharacter((current) => (current + 1) % conanFavorites.length)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/85 px-2 py-1 text-xs font-semibold text-grape"
+                  >
+                    ▶
+                  </button>
+                </div>
+
+                <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  {conanFavorites.map((character, index) => (
+                    <button
+                      key={character.name}
+                      type="button"
+                      onMouseEnter={() => setActiveConanCharacter(index)}
+                      onFocus={() => setActiveConanCharacter(index)}
+                      onClick={() => setActiveConanCharacter(index)}
+                      className={`rounded-xl border px-3 py-2 text-left transition ${
+                        activeConanCharacter === index
+                          ? "border-rose/30 bg-gradient-to-r from-petal to-cloud"
+                          : "border-white/70 bg-white hover:bg-petal/35"
+                      }`}
+                    >
+                      <p className="text-sm font-semibold text-grape">{character.name}</p>
+                      <p className="mt-0.5 text-xs text-grape/75">{character.subtitle}</p>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="mt-3 rounded-xl border border-white/70 bg-white/80 p-3">
+                  <p className="text-sm font-semibold text-grape">{conanFavorites[activeConanCharacter].name}</p>
+                  <p className="mt-1 text-sm text-grape/85">{conanFavorites[activeConanCharacter].about}</p>
+                </div>
+              </section>
             </div>
           </article>
         </div>
