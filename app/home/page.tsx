@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BackgroundBlobs } from "@/components/background-blobs";
 import type { ProjectItem } from "@/components/projects-showcase";
 import { interests } from "@/data/interests";
@@ -50,6 +50,25 @@ const livedCountryPins = [
 
 const traveledCountries = ["Morocco", "England", "Paris", "Madrid", "Singapore", "Thailand"];
 
+const whitePianoKeys = [
+  { note: "C3", freq: 130.81 },
+  { note: "D3", freq: 146.83 },
+  { note: "E3", freq: 164.81 },
+  { note: "F3", freq: 174.61 },
+  { note: "G3", freq: 196.0 },
+  { note: "A3", freq: 220.0 },
+  { note: "B3", freq: 246.94 },
+  { note: "C4", freq: 261.63 }
+];
+
+const blackPianoKeys = [
+  { note: "C#3", freq: 138.59, left: "11%" },
+  { note: "D#3", freq: 155.56, left: "23.5%" },
+  { note: "F#3", freq: 185.0, left: "48.5%" },
+  { note: "G#3", freq: 207.65, left: "61%" },
+  { note: "A#3", freq: 233.08, left: "73.5%" }
+];
+
 const philosophyItems = [
   "If onboarding takes too long, simplify it first.",
   "Ship quickly, then polish what users touch most.",
@@ -62,11 +81,13 @@ export default function MainHomePage() {
   const [isCravingModalOpen, setIsCravingModalOpen] = useState(false);
   const [isLearningModalOpen, setIsLearningModalOpen] = useState(false);
   const [isCodingLoreModalOpen, setIsCodingLoreModalOpen] = useState(false);
+  const [isPerfectPitchModalOpen, setIsPerfectPitchModalOpen] = useState(false);
   const [isCountriesModalOpen, setIsCountriesModalOpen] = useState(false);
   const [litCountries, setLitCountries] = useState<string[]>([]);
   const [otherTravelCountry, setOtherTravelCountry] = useState("");
   const [extraTravelCountries, setExtraTravelCountries] = useState<string[]>([]);
   const [travelTagPositions, setTravelTagPositions] = useState<Record<string, { left: number; top: number }>>({});
+  const pianoContextRef = useRef<AudioContext | null>(null);
   const featuredProject = portfolioProjects.find((project) => project.slug === featuredProjectSlug) ?? portfolioProjects[0];
   const todayCraving = weeklyCravings[new Date().getDay()];
   // Add "currently-learning" to any interest tag in data/interests.tsx to include it in this modal.
@@ -101,6 +122,30 @@ export default function MainHomePage() {
     setOtherTravelCountry("");
   };
 
+  const playPianoNote = async (frequency: number) => {
+    if (!pianoContextRef.current) {
+      pianoContextRef.current = new window.AudioContext();
+    }
+
+    const context = pianoContextRef.current;
+    await context.resume();
+
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+    const now = context.currentTime;
+
+    oscillator.type = "triangle";
+    oscillator.frequency.setValueAtTime(frequency, now);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.2, now + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.9);
+
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+    oscillator.start(now);
+    oscillator.stop(now + 0.9);
+  };
+
   useEffect(() => {
     const onPageClick = (event: MouseEvent) => {
       const symbol = symbols[Math.floor(Math.random() * symbols.length)];
@@ -122,12 +167,22 @@ export default function MainHomePage() {
         setIsCravingModalOpen(false);
         setIsLearningModalOpen(false);
         setIsCodingLoreModalOpen(false);
+        setIsPerfectPitchModalOpen(false);
         setIsCountriesModalOpen(false);
       }
     };
 
     document.addEventListener("keydown", onEscape);
     return () => document.removeEventListener("keydown", onEscape);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (pianoContextRef.current) {
+        pianoContextRef.current.close();
+        pianoContextRef.current = null;
+      }
+    };
   }, []);
 
   return (
@@ -258,9 +313,13 @@ export default function MainHomePage() {
                       I've lived in 4 different countries (guess which ones!).
                     </button>
 
-                    <article className="rounded-xl border border-white/50 bg-white/75 px-3 py-2">
-                      3. I have perfect pitch.
-                    </article>
+                    <button
+                      type="button"
+                      onClick={() => setIsPerfectPitchModalOpen(true)}
+                      className="w-full rounded-xl border border-white/50 bg-white/75 px-3 py-2 text-left transition hover:-translate-y-0.5"
+                    >
+                      I have perfect pitch.
+                    </button>
 
                     <article className="rounded-xl border border-white/50 bg-white/75 px-3 py-2">
                       4. I have been a Detective Conan fan since age 5.
@@ -606,6 +665,62 @@ export default function MainHomePage() {
                 Add
               </button>
             </form>
+          </article>
+        </div>
+      )}
+
+      {isPerfectPitchModalOpen && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/45 p-4"
+          onClick={() => setIsPerfectPitchModalOpen(false)}
+          role="presentation"
+        >
+          <article
+            className="w-[min(760px,94vw)] rounded-3xl border border-white/70 bg-gradient-to-b from-white to-[#f7fbff] p-6 shadow-[0_22px_45px_rgba(29,14,39,0.28)]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-grape/70">Lore Detail</p>
+            <div className="mt-2 flex items-start justify-between gap-4">
+              <h3 className="text-3xl font-black text-grape">Perfect Pitch Keyboard</h3>
+              <button
+                type="button"
+                onClick={() => setIsPerfectPitchModalOpen(false)}
+                className="rounded-full bg-petal px-3 py-1 text-xs font-semibold text-grape"
+              >
+                Close
+              </button>
+            </div>
+
+            <p className="mt-2 text-sm text-grape/85">Tap keys from low C to high C.</p>
+
+            <div className="mt-4 overflow-x-auto rounded-2xl border border-white/70 bg-white p-3">
+              <div className="relative mx-auto min-w-[560px] max-w-[680px]">
+                <div className="grid grid-cols-8 gap-1">
+                  {whitePianoKeys.map((key) => (
+                    <button
+                      key={key.note}
+                      type="button"
+                      onClick={() => void playPianoNote(key.freq)}
+                      className="h-40 rounded-b-xl border border-slate-300 bg-white text-xs font-semibold text-grape shadow-[inset_0_-6px_0_rgba(0,0,0,0.06)] transition hover:bg-slate-50 active:translate-y-[1px]"
+                    >
+                      <span className="mt-28 inline-block">{key.note}</span>
+                    </button>
+                  ))}
+                </div>
+
+                {blackPianoKeys.map((key) => (
+                  <button
+                    key={key.note}
+                    type="button"
+                    onClick={() => void playPianoNote(key.freq)}
+                    className="absolute top-0 z-20 h-24 w-[9%] -translate-x-1/2 rounded-b-lg border border-slate-700 bg-slate-900 text-[10px] font-semibold text-white shadow-lg transition hover:bg-black active:translate-y-[1px]"
+                    style={{ left: key.left }}
+                  >
+                    {key.note}
+                  </button>
+                ))}
+              </div>
+            </div>
           </article>
         </div>
       )}
