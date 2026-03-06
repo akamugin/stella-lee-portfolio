@@ -39,11 +39,16 @@ const learningBackgroundImages = [
 
 const learningEmojis = ["⭐️", "🌸", "🌷", "🌹", "🍀", "🪼", "🐬", "🐾", "🍓", "🍏", "🍋", "🍒", "🍫", "🎀", "🩵", "❣️", "💕", "🤍", "♥️"];
 
-const loreItems = [
-  "Detective Conan fan since age 5.",
-  "I like learning instruments by ear.",
-  "Language learning is one of my favorite hobbies."
+const livedCountryPins = [
+  { key: "korea", label: "Korea", left: "88%", top: "36.5%" },
+  { key: "japan", label: "Japan", left: "90%", top: "39%" },
+  { key: "philippines", label: "Philippines", left: "87%", top: "49%" },
+  { key: "hawaii", label: "Hawaii (USA)", left: "10%", top: "47%" },
+  { key: "nashville", label: "Nashville (USA)", left: "27%", top: "43%" },
+  { key: "california", label: "California (USA)", left: "14%", top: "40%" }
 ];
+
+const traveledCountries = ["Morocco", "England", "Paris", "Madrid", "Singapore", "Thailand"];
 
 const philosophyItems = [
   "If onboarding takes too long, simplify it first.",
@@ -56,10 +61,17 @@ export default function MainHomePage() {
   const [activeProject, setActiveProject] = useState<ProjectItem | null>(null);
   const [isCravingModalOpen, setIsCravingModalOpen] = useState(false);
   const [isLearningModalOpen, setIsLearningModalOpen] = useState(false);
+  const [isCodingLoreModalOpen, setIsCodingLoreModalOpen] = useState(false);
+  const [isCountriesModalOpen, setIsCountriesModalOpen] = useState(false);
+  const [litCountries, setLitCountries] = useState<string[]>([]);
+  const [otherTravelCountry, setOtherTravelCountry] = useState("");
+  const [extraTravelCountries, setExtraTravelCountries] = useState<string[]>([]);
+  const [travelTagPositions, setTravelTagPositions] = useState<Record<string, { left: number; top: number }>>({});
   const featuredProject = portfolioProjects.find((project) => project.slug === featuredProjectSlug) ?? portfolioProjects[0];
   const todayCraving = weeklyCravings[new Date().getDay()];
   // Add "currently-learning" to any interest tag in data/interests.tsx to include it in this modal.
   const currentLearningInterests = interests.filter((interest) => interest.tags?.includes("currently-learning"));
+  const allTravelCountries = [...traveledCountries, ...extraTravelCountries];
   const [learningEmojiRow, setLearningEmojiRow] = useState<string[]>([]);
 
   useEffect(() => {
@@ -72,6 +84,22 @@ export default function MainHomePage() {
     const timer = window.setInterval(pickEight, 2600);
     return () => window.clearInterval(timer);
   }, []);
+
+  const addOtherTravelCountry = () => {
+    const trimmed = otherTravelCountry.trim();
+    if (!trimmed) {
+      return;
+    }
+
+    const alreadyExists = allTravelCountries.some((country) => country.toLowerCase() === trimmed.toLowerCase());
+    if (alreadyExists) {
+      setOtherTravelCountry("");
+      return;
+    }
+
+    setExtraTravelCountries((current) => [...current, trimmed]);
+    setOtherTravelCountry("");
+  };
 
   useEffect(() => {
     const onPageClick = (event: MouseEvent) => {
@@ -93,6 +121,8 @@ export default function MainHomePage() {
         setActiveProject(null);
         setIsCravingModalOpen(false);
         setIsLearningModalOpen(false);
+        setIsCodingLoreModalOpen(false);
+        setIsCountriesModalOpen(false);
       }
     };
 
@@ -211,14 +241,30 @@ export default function MainHomePage() {
 
                 <section className="mt-4">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-grape/70">Lore Panel</p>
-                  <div className="mt-2 rounded-2xl border border-white/45 bg-white/70 p-3">
-                    <ul className="space-y-2 text-sm text-grape/85">
-                      {loreItems.map((item) => (
-                        <li key={item} className="rounded-xl bg-white/70 px-3 py-2">
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="mt-2 space-y-2 text-sm text-grape/85">
+                    <button
+                      type="button"
+                      onClick={() => setIsCodingLoreModalOpen(true)}
+                      className="w-full rounded-xl border border-white/50 bg-white/75 px-3 py-2 text-left transition hover:-translate-y-0.5"
+                    >
+                      I started my professional coding experience in college
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setIsCountriesModalOpen(true)}
+                      className="w-full rounded-xl border border-white/50 bg-white/75 px-3 py-2 text-left transition hover:-translate-y-0.5"
+                    >
+                      I've lived in 4 different countries (guess which ones!).
+                    </button>
+
+                    <article className="rounded-xl border border-white/50 bg-white/75 px-3 py-2">
+                      3. I have perfect pitch.
+                    </article>
+
+                    <article className="rounded-xl border border-white/50 bg-white/75 px-3 py-2">
+                      4. I have been a Detective Conan fan since age 5.
+                    </article>
                   </div>
                 </section>
 
@@ -398,6 +444,208 @@ export default function MainHomePage() {
                   />
                 </div>
               ))}
+            </div>
+          </article>
+        </div>
+      )}
+
+      {isCountriesModalOpen && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/45 p-4"
+          onClick={() => setIsCountriesModalOpen(false)}
+          role="presentation"
+        >
+          <article
+            className="w-[min(760px,94vw)] rounded-3xl border border-white/70 bg-gradient-to-b from-white to-[#f3f9ff] p-6 shadow-[0_22px_45px_rgba(29,14,39,0.28)]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-grape/70">Lore Map</p>
+            <div className="mt-2 flex items-start justify-between gap-4">
+              <h3 className="text-3xl font-black text-grape">Countries I Lived In</h3>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLitCountries([]);
+                    setTravelTagPositions({});
+                    setExtraTravelCountries([]);
+                    setOtherTravelCountry("");
+                  }}
+                  className="rounded-full bg-cloud px-3 py-1 text-xs font-semibold text-grape transition hover:-translate-y-0.5"
+                >
+                  Reset
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsCountriesModalOpen(false)}
+                  className="rounded-full bg-petal px-3 py-1 text-xs font-semibold text-grape"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+
+            <p className="mt-2 text-sm text-grape/85">Click each pin to light it up.</p>
+
+            <div className="mt-4 overflow-hidden rounded-2xl border border-white/70 bg-white/80 p-2">
+              <div
+                className="relative"
+                onDragOver={(event) => {
+                  event.preventDefault();
+                }}
+                onDrop={(event) => {
+                  event.preventDefault();
+                  const country = event.dataTransfer.getData("text/plain");
+                  if (!country) {
+                    return;
+                  }
+                  const rect = event.currentTarget.getBoundingClientRect();
+                  const left = ((event.clientX - rect.left) / rect.width) * 100;
+                  const top = ((event.clientY - rect.top) / rect.height) * 100;
+                  const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+                  setTravelTagPositions((current) => ({
+                    ...current,
+                    [country]: { left: clamp(left, 4, 96), top: clamp(top, 6, 94) }
+                  }));
+                }}
+              >
+                <img
+                  src="/images/lore/colored-map.png"
+                  alt="World map with lived, traveled, and visited countries"
+                  className="h-auto w-full rounded-xl object-cover"
+                />
+                {livedCountryPins.map((pin) => {
+                  const isLit = litCountries.includes(pin.key);
+                  return (
+                    <button
+                      key={pin.key}
+                      type="button"
+                      onClick={() => {
+                        setLitCountries((current) =>
+                          current.includes(pin.key) ? current.filter((item) => item !== pin.key) : [...current, pin.key]
+                        );
+                      }}
+                      className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full border px-2 py-1 text-[11px] font-semibold transition ${
+                        pin.key === "korea" ? "z-20" : "z-10"
+                      } ${
+                        isLit
+                          ? "border-amber-200 bg-amber-300 text-amber-900 shadow-[0_0_24px_rgba(251,191,36,0.95)]"
+                          : "border-white/80 bg-white/80 text-grape/80 hover:bg-white"
+                      }`}
+                      style={{ left: pin.left, top: pin.top }}
+                    >
+                      {pin.label}
+                    </button>
+                  );
+                })}
+
+                {Object.entries(travelTagPositions).map(([country, position]) => (
+                  <button
+                    key={country}
+                    type="button"
+                    draggable
+                    onDragStart={(event) => {
+                      event.dataTransfer.setData("text/plain", country);
+                      event.dataTransfer.effectAllowed = "move";
+                    }}
+                    className="absolute z-30 -translate-x-1/2 -translate-y-1/2 cursor-grab rounded-full border border-rose/30 bg-white/95 px-2 py-1 text-[11px] font-semibold text-grape shadow-sm active:cursor-grabbing"
+                    style={{ left: `${position.left}%`, top: `${position.top}%` }}
+                  >
+                    {country}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <p className="mt-3 text-sm font-semibold text-grape/85">
+              Progress: {litCountries.length} / {livedCountryPins.length} lit
+            </p>
+
+            <p className="mt-4 text-xs font-semibold uppercase tracking-[0.16em] text-grape/70">Countries I Traveled</p>
+            <p className="mt-1 text-xs text-grape/75">Drag any button onto the map to place it.</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {allTravelCountries.map((country) => (
+                <button
+                  key={country}
+                  type="button"
+                  draggable
+                  onDragStart={(event) => {
+                    event.dataTransfer.setData("text/plain", country);
+                    event.dataTransfer.effectAllowed = "move";
+                  }}
+                  className="cursor-grab rounded-full border border-rose/20 bg-gradient-to-r from-petal to-cloud px-3 py-1.5 text-sm font-semibold text-grape active:cursor-grabbing"
+                >
+                  {country}
+                </button>
+              ))}
+            </div>
+
+            <form
+              className="mt-3 flex flex-wrap items-center gap-2"
+              onSubmit={(event) => {
+                event.preventDefault();
+                addOtherTravelCountry();
+              }}
+            >
+              <label htmlFor="other-country" className="text-xs font-semibold uppercase tracking-[0.14em] text-grape/70">
+                Others
+              </label>
+              <input
+                id="other-country"
+                type="text"
+                value={otherTravelCountry}
+                onChange={(event) => setOtherTravelCountry(event.target.value)}
+                placeholder="Type a country..."
+                className="min-w-[180px] rounded-full border border-white/70 bg-white px-3 py-1.5 text-sm text-grape outline-none ring-rose/30 focus:ring-2"
+              />
+              <button
+                type="submit"
+                className="rounded-full bg-cloud px-3 py-1.5 text-sm font-semibold text-grape transition hover:-translate-y-0.5"
+              >
+                Add
+              </button>
+            </form>
+          </article>
+        </div>
+      )}
+
+      {isCodingLoreModalOpen && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center bg-black/45 p-4"
+          onClick={() => setIsCodingLoreModalOpen(false)}
+          role="presentation"
+        >
+          <article
+            className="w-[min(680px,92vw)] rounded-3xl border border-white/70 bg-gradient-to-b from-white to-[#fdf4ff] p-6 shadow-[0_22px_45px_rgba(29,14,39,0.28)]"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-grape/70">Lore Detail</p>
+            <div className="mt-2 flex items-start justify-between gap-4">
+              <h3 className="text-3xl font-black text-grape">How I Learned To Code</h3>
+              <button
+                type="button"
+                onClick={() => setIsCodingLoreModalOpen(false)}
+                className="rounded-full bg-petal px-3 py-1 text-xs font-semibold text-grape"
+              >
+                Close
+              </button>
+            </div>
+
+            <p className="mt-3 text-sm text-grape/85">
+              I took AP CS in high school and learned to code that way but Vanderbilt University was where I truly
+              learned how to code. Thanks to Prof. Roth &amp; Prof. Hemingway!
+            </p>
+
+            <div className="mt-4 text-center">
+              <a
+                href="https://hsproject2016.vercel.app/"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex rounded-full bg-petal px-4 py-2 text-sm font-semibold text-grape transition hover:-translate-y-0.5"
+              >
+                Visit my high school project
+              </a>
             </div>
           </article>
         </div>
