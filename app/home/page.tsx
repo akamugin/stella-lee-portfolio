@@ -39,6 +39,7 @@ const learningBackgroundImages = [
 
 const learningEmojis = ["⭐️", "🌸", "🌷", "🌹", "🍀", "🪼", "🐬", "🐾", "🍓", "🍏", "🍋", "🍒", "🍫", "🎀", "🩵", "❣️", "💕", "🤍", "♥️"];
 const heroFloatingEmojis = ["⭐️", "🌸", "🌷", "🐬", "🍓", "🎀", "🩵", "💕"];
+const backgroundFloatingEmojis = ["🌸", "⭐️", "🍓", "🪼", "🐬", "🎀", "💕", "🩵", "🌷", "🍒", "🍋", "🤍"];
 
 const livedCountryPins = [
   { key: "korea", label: "Korea", left: "88%", top: "36.5%" },
@@ -241,8 +242,25 @@ export default function MainHomePage() {
           </motion.span>
         ))}
 
-        <section className="grid w-full items-start gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:gap-8">
-          <div className="rounded-3xl border border-white/70 bg-white/80 p-5 shadow-dreamy sm:p-6 lg:p-8">
+        <section className="relative grid w-full items-start gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:gap-8">
+          <div className="pointer-events-none absolute inset-0 hidden lg:block">
+            {backgroundFloatingEmojis.map((emoji, index) => (
+              <motion.span
+                key={`bg-emoji-${emoji}-${index}`}
+                className="absolute text-2xl opacity-80"
+                style={{
+                  left: `${6 + (index % 6) * 10}%`,
+                  top: `${70 + Math.floor(index / 6) * 20 + (index % 2 ? 4 : -2)}%`
+                }}
+                animate={{ y: [0, -10, 0], rotate: [0, index % 2 ? 8 : -8, 0], opacity: [0.65, 0.95, 0.65] }}
+                transition={{ duration: 3 + (index % 4) * 0.5, repeat: Infinity, delay: index * 0.15 }}
+              >
+                {emoji}
+              </motion.span>
+            ))}
+          </div>
+
+          <div className="relative z-10 rounded-3xl border border-white/70 bg-white/80 p-5 shadow-dreamy sm:p-6 lg:p-8">
             <p className="inline-flex rounded-full bg-petal px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-grape">
               Home
             </p>
@@ -293,7 +311,7 @@ export default function MainHomePage() {
             initial={{ opacity: 0, x: 14 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
-            className="mx-auto aspect-[9/19.5] w-[min(92vw,350px,calc((100svh-9rem)*9/19.5))] sm:min-w-[360px] rounded-[42px] border border-black/40 bg-[#111115] p-3 shadow-[0_20px_45px_rgba(33,15,35,0.45)] lg:ml-auto lg:mr-0 lg:justify-self-end"
+            className="relative z-10 mx-auto aspect-[9/19.5] w-[min(92vw,350px,calc((100svh-9rem)*9/19.5))] sm:min-w-[360px] rounded-[42px] border border-black/40 bg-[#111115] p-3 shadow-[0_20px_45px_rgba(33,15,35,0.45)] lg:ml-auto lg:mr-0 lg:justify-self-end"
           >
             <div className="relative h-full w-full overflow-hidden rounded-[32px] border border-white/15 bg-gradient-to-b from-[#ffd9ec] to-[#dff3ff] p-3">
               <div className="pointer-events-none absolute left-1/2 top-0 h-5 w-28 -translate-x-1/2 rounded-b-2xl bg-black/80" />
