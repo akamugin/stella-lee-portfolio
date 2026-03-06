@@ -40,6 +40,20 @@ const learningBackgroundImages = [
 const learningEmojis = ["⭐️", "🌸", "🌷", "🌹", "🍀", "🪼", "🐬", "🐾", "🍓", "🍏", "🍋", "🍒", "🍫", "🎀", "🩵", "❣️", "💕", "🤍", "♥️"];
 const heroFloatingEmojis = ["⭐️", "🌸", "🌷", "🐬", "🍓", "🎀", "🩵", "💕"];
 const backgroundFloatingEmojis = ["🌸", "⭐️", "🍓", "🪼", "🐬", "🎀", "💕", "🩵", "🌷", "🍒", "🍋", "🤍"];
+const backgroundEmojiSpots = [
+  { left: "1%", top: "74%" },
+  { left: "14%", top: "78%" },
+  { left: "24%", top: "72%" },
+  { left: "34%", top: "80%" },
+  { left: "44%", top: "69%" },
+  { left: "54%", top: "82%" },
+  { left: "7%", top: "88%" },
+  { left: "18%", top: "92%" },
+  { left: "29%", top: "86%" },
+  { left: "40%", top: "90%" },
+  { left: "51%", top: "94%" },
+  { left: "60%", top: "88%" }
+];
 
 const livedCountryPins = [
   { key: "korea", label: "Korea", left: "88%", top: "36.5%" },
@@ -247,10 +261,10 @@ export default function MainHomePage() {
             {backgroundFloatingEmojis.map((emoji, index) => (
               <motion.span
                 key={`bg-emoji-${emoji}-${index}`}
-                className="absolute text-2xl opacity-80"
+                className="absolute text-[30px] opacity-80"
                 style={{
-                  left: `${6 + (index % 6) * 10}%`,
-                  top: `${70 + Math.floor(index / 6) * 20 + (index % 2 ? 4 : -2)}%`
+                  left: backgroundEmojiSpots[index % backgroundEmojiSpots.length]?.left ?? "10%",
+                  top: backgroundEmojiSpots[index % backgroundEmojiSpots.length]?.top ?? "70%"
                 }}
                 animate={{ y: [0, -10, 0], rotate: [0, index % 2 ? 8 : -8, 0], opacity: [0.65, 0.95, 0.65] }}
                 transition={{ duration: 3 + (index % 4) * 0.5, repeat: Infinity, delay: index * 0.15 }}
